@@ -18,6 +18,7 @@ class CustomCartPole(CustomEnvBase):
         self.accum_reward_in_update = 0
         self.accum_r0_in_update = 0
         self.accum_r1_in_update = 0
+
         # initialize log header
         self.log_header = [["update", "step", "r0", "r1", "reward"]]
         self.init_log()

@@ -10,11 +10,11 @@ from customenv.CustomCartPole import CustomCartPole
 
 def main():
     env = get_env(const.ENV_ID)
+    env = DummyVecEnv([lambda: env])
 
+    model_file = const.ENV_ID + "_" + const.ALGORITHM + str(const.TOTAL_TIMESTEPS)
     if const.USE_CUSTOM_ENV:
-        model_file = const.ALGORITHM + "_cartpole_custom"
-    else:
-        model_file = const.ALGORITHM + "_cartpole"
+        model_file += "_custom"
 
     if const.DO_LEARNING:
         model = get_model(env)
@@ -53,9 +53,13 @@ def get_env(env_id: str):
 
 def get_model(env):
     if const.ALGORITHM == "PPO":
-        model = PPO(const.POLICY, env, verbose=1, seed=const.SEED)
+        model = PPO(
+            const.POLICY, env, verbose=1, seed=const.SEED, tensorboard_log="./tlogs/"
+        )
     elif const.ALGORITHM == "DQN":
-        model = DQN(const.POLICY, env, verbose=1, seed=const.SEED)
+        model = DQN(
+            const.POLICY, env, verbose=1, seed=const.SEED, tensorboard_log="./tlogs/"
+        )
     else:
         raise ValueError("Not suppoted algorithm.")
     return model

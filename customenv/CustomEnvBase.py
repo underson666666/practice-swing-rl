@@ -23,9 +23,11 @@ class CustomEnvBase(gym.Wrapper):
             + ".csv"
         )
         self.log_path = os.path.join(self.log_dir, self.log_file_name)
+
         # you have to initialize log header
         # self.log_header = [["update", "step", "r0", "r1", "reward"]]
         # self.append_csv(self.log_header)
+
         self.log_datas = list()
 
     def append_csv(self, datas):

@@ -5,30 +5,26 @@ from datetime import datetime
 import const
 import gym
 
+from .CustomEnvBase import CustomEnvBase
 
-class CustomCartPole(gym.Wrapper):
+
+class CustomCartPole(CustomEnvBase):
     def __init__(self, env):
         super(CustomCartPole, self).__init__(env)
+
+        # initialize log datas
         self.step_counter = 0
         self.update_counter = 0
         self.accum_reward_in_update = 0
         self.accum_r0_in_update = 0
         self.accum_r1_in_update = 0
-
-        self.log_dir = os.getcwd()
-        # self.log_file_name = "learn_logs_" + str(const.TOTAL_TIMESTEPS) + ".csv"
-        now = datetime.now()
-        now_str = now.strftime("%Y%m%d%H%M%S")
-        self.log_file_name = (
-            "learn_logs_" + str(const.TOTAL_TIMESTEPS) + "_" + now_str + ".csv"
-        )
-        self.log_path = os.path.join(self.log_dir, self.log_file_name)
+        # initialize log header
         self.log_header = [["update", "step", "r0", "r1", "reward"]]
-        self.append_csv(self.log_header)
-        self.log_datas = list()
+        self.init_log()
 
     def reset(self):
 
+        # set log data
         self.step_log = [
             self.update_counter,
             self.step_counter,
@@ -43,6 +39,7 @@ class CustomCartPole(gym.Wrapper):
             self.log_datas = list()
 
         obs = self.env.reset()
+        # reset log data each elisode
         self.step_counter = 0
         self.update_counter += 1
         self.accum_reward_in_update = 0
@@ -60,7 +57,6 @@ class CustomCartPole(gym.Wrapper):
 
         if const.USE_CUSTOM_ENV:
             r1 = self.center_position_reward(obs)
-            # r1 = self.left_position_reward(obs)
             rewards += r1
             self.accum_r1_in_update += r1
 
@@ -85,22 +81,5 @@ class CustomCartPole(gym.Wrapper):
             return 1
         return 0
 
-    def append_csv(self, datas):
-        with open(self.log_path, "a") as f:
-            w = csv.writer(f)
-            w.writerows(datas)
-        return
-
-    def create_csv(self):
-        self.append_csv(self.log_header)
-
     def render(self):
         self.env.render()
-
-    def close(self):
-        self.env.close()
-        self.append_csv(self.log_datas)
-        self.log_datas = list()
-
-    def seed(self, seed=None):
-        self.env.seed(seed)

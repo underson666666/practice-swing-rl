@@ -23,8 +23,6 @@ class CustomCartPole(gym.Wrapper):
             "learn_logs_" + str(const.TOTAL_TIMESTEPS) + "_" + now_str + ".csv"
         )
         self.log_path = os.path.join(self.log_dir, self.log_file_name)
-        if not const.DO_EVALUATION and os.path.exists(self.log_path):
-            os.remove(self.log_path)
         self.log_header = [["update", "step", "r0", "r1", "reward"]]
         self.append_csv(self.log_header)
         self.log_datas = list()
@@ -88,8 +86,6 @@ class CustomCartPole(gym.Wrapper):
         return 0
 
     def append_csv(self, datas):
-        if const.DO_EVALUATION:
-            return
         with open(self.log_path, "a") as f:
             w = csv.writer(f)
             w.writerows(datas)

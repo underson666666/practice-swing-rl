@@ -16,16 +16,16 @@ def main():
     if const.USE_CUSTOM_ENV:
         model_file += "_custom"
 
-    if const.DO_LEARNING:
-        model = get_model(env)
-        model.learn(total_timesteps=const.TOTAL_TIMESTEPS)
-        model.save(model_file)
-        del model  # remove to demonstrate saving and loading
+    try:
+        if const.DO_LEARNING:
+            model = get_model(env)
+            model.learn(total_timesteps=const.TOTAL_TIMESTEPS)
+            model.save(model_file)
+            del model  # remove to demonstrate saving and loading
 
-    if const.DO_EVALUATION:
-        model = get_modle_by_file(model_file)
+        if const.DO_EVALUATION:
+            model = get_modle_by_file(model_file)
 
-        try:
             while True:
                 obs = env.reset()
                 dones = False
@@ -38,10 +38,11 @@ def main():
                     # print(dones)
                     # print(info)
                     break
-        except KeyboardInterrupt as e:
-            print("detect keyboard interrupt!!")
-        finally:
-            env.close()
+
+    except KeyboardInterrupt as e:
+        print("detect keyboard interrupt!!")
+    finally:
+        env.close()
 
 
 def get_env(env_id: str):

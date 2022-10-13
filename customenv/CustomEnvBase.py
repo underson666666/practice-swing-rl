@@ -46,3 +46,6 @@ class CustomEnvBase(gym.Wrapper):
 
     def seed(self, seed=None):
         self.env.seed(seed)
+
+    def render(self, mode):
+        self.env.render(mode)

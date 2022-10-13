@@ -81,6 +81,3 @@ class CustomCartPole(CustomEnvBase):
         if 2 <= position <= 3:
             return 1
         return 0
-
-    def render(self):
-        self.env.render()

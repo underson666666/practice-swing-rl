@@ -8,7 +8,9 @@ import gym
 
 class CustomEnvBase(gym.Wrapper):
     def init_log(self):
-        self.log_dir = os.getcwd()
+        self.log_dir = os.path.join(os.getcwd(), "logs")
+        if not os.path.exists(self.log_dir):
+            os.makedirs(self.log_dir)
         now = datetime.now()
         now_str = now.strftime("%Y%m%d%H%M%S")
         self.log_file_name = (
